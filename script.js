@@ -1,0 +1,70 @@
+document
+  .getElementById("itemForm")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const itemName = document.getElementById("itemName").value;
+    const itemAmount = document.getElementById("itemAmount").value;
+    if (itemAmount == "") {
+      alert("Soo qor item amount");
+      return;
+    }
+    addItemToTable(itemName, itemAmount);
+    document.getElementById("itemForm").reset();
+  });
+
+let itemId = 0;
+
+function addItemToTable(name, amount) {
+  const tableBody = document.getElementById("itemsTableBody");
+  const row = tableBody.insertRow();
+  row.setAttribute("id", "item-" + itemId);
+
+  row.insertCell(0).innerText = itemId + 1;
+  row.insertCell(1).innerText = name;
+  row.insertCell(2).innerText = amount;
+  const actionsCell = row.insertCell(3);
+  actionsCell.innerHTML = `<button onclick="editItem(${itemId})" class="btn btn-primary btn-sm">Edit</button>
+                             <button onclick="deleteItem(${itemId})" class="btn btn-danger btn-sm">Delete</button>`;
+  itemId++;
+}
+
+function editItem(id) {
+  const row = document.getElementById("item-" + id);
+  const name = row.cells[1].innerText;
+  const amount = row.cells[2].innerText;
+
+  document.getElementById("itemName").value = name;
+  document.getElementById("itemAmount").value = amount;
+
+  document.getElementById("itemForm").onsubmit = function (event) {
+    event.preventDefault();
+    updateItem(id);
+  };
+}
+
+function updateItem(id) {
+  const row = document.getElementById("item-" + id);
+  const name = document.getElementById("itemName").value;
+  const amount = document.getElementById("itemAmount").value;
+
+  row.cells[1].innerText = name;
+  row.cells[2].innerText = amount;
+
+  document.getElementById("itemForm").onsubmit = function (event) {
+    event.preventDefault();
+    const itemName = document.getElementById("itemName").value;
+    const itemAmount = document.getElementById("itemAmount").value;
+    addItemToTable(itemName, itemAmount);
+    document.getElementById("itemForm").reset();
+  };
+  document.getElementById("itemForm").reset();
+}
+
+function deleteItem(id) {
+  const row = document.getElementById("item-" + id);
+
+
+  
+  row.parentNode.removeChild(row);
+}
